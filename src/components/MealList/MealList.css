@@ -1,0 +1,39 @@
+/* Meal List Grid Layout */
+.meal-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px; /* Adjust spacing between items */
+  }
+  
+  
+  /* Meal Card Style */
+  .meal-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .meal-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .meal-card h3 {
+    margin: 10px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .meal-card p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  .meal-card:hover {
+    transform: scale(1.05);
+  }
+  
