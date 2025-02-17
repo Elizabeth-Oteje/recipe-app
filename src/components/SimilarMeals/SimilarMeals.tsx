@@ -7,33 +7,36 @@ import {
   getPaginationRowModel,
   createColumnHelper,
   flexRender,
+  ColumnDef,
 } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 import { fetchSimilarMeals } from "../../redux/mealSlice";
 import { RootState, AppDispatch } from "../../redux/store";
 import "./SimilarMealsTable.css";
+import { Meal } from "../../interfaces/mealInterfaces";
 
 const SimilarMealsTable = ({ category }: { category: string }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const meals = useSelector((state: RootState) => state.meals.similarMeals);
-  const [globalFilter, setGlobalFilter] = useState(""); // Local state for filtering
-
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
   // Fetch similar meals when category changes
   useEffect(() => {
     if (category) {
-      dispatch(fetchSimilarMeals(category)); // Assuming the API fetches by category
+      dispatch(fetchSimilarMeals(category)); 
+      setPageIndex(0); 
     }
   }, [category, dispatch]);
 
-  const columnHelper = createColumnHelper();
+  const columnHelper = createColumnHelper<Meal>();
 
-  const columns = [
-    columnHelper.accessor("", {
-      id: "S.No",
-      cell: (info) => <span>{info.row.index + 1}</span>,
-      header: "S.No",
-    }),
+  const columns: ColumnDef<Meal>[] = [
+    columnHelper.display({
+        id: "S.No",
+        cell: (info) => <span>{info.row.index + 1}</span>,
+        header: "S.No",
+      }),
     columnHelper.accessor("strMealThumb", {
       cell: (info) => (
         <img src={info.getValue()} alt="Meal" className="meal-image" />
@@ -48,7 +51,12 @@ const SimilarMealsTable = ({ category }: { category: string }) => {
       cell: (info) => (
         <button
           className="view-btn"
-          onClick={() => navigate(`/meal/${info.getValue()}`)}
+          onClick={() => {
+            setPageIndex(0);
+            navigate(`/meal/${info.getValue()}`);
+            window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to the top smoothly
+          }}
+          
         >
           View
         </button>
@@ -56,35 +64,27 @@ const SimilarMealsTable = ({ category }: { category: string }) => {
       header: "Action",
     }),
   ];
-  
 
-  // Apply filtering manually
-  const filteredMeals = meals.filter((meal) =>
-    meal?.strMeal?.toLowerCase().includes(globalFilter.toLowerCase())
-  );
+
 
   const table = useReactTable({
-    data: filteredMeals,
+    data: meals || [],
     columns,
-    state: {
-      globalFilter,
-    },
-    getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    state: { pagination: { pageIndex, pageSize } },
+    onPaginationChange: (updater) => {
+      if (typeof updater === "function") {
+        const newState = updater({ pageIndex, pageSize });
+        setPageIndex(newState.pageIndex);
+        setPageSize(newState.pageSize);
+      }
+    },
   });
 
   return (
     <div className="table-container">
-      <div className="table-controls">
-        <input
-          type="text"
-          placeholder="Search meals..."
-          value={globalFilter}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-          className="search-input"
-        />
-      </div>
+     
 
       <table className="meal-table">
         <thead>
@@ -134,6 +134,9 @@ const SimilarMealsTable = ({ category }: { category: string }) => {
         >
           {">"}
         </button>
+        <span>
+          Showing {meals.length} meals
+        </span>
       </div>
     </div>
   );
