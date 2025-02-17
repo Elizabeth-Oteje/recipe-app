@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Meal, MealDetails } from '../interfaces/mealInterfaces';
+import { Meal, MealDetail } from '../interfaces/mealInterfaces';
 import { fetchMeals as fetchMealsApi, fetchMealDetails as fetchMealDetailsApi } from '../api/mealApi'
 
 interface MealState {
   meals: Meal[];
-  selectedMeal: MealDetails | null;
+  selectedMeal: MealDetail | null;
   loading: boolean;
   error: string | null;
 }
@@ -35,7 +35,7 @@ const mealSlice = createSlice({
     setMeals: (state, action: PayloadAction<Meal[]>) => {
       state.meals = action.payload;
     },
-    setSelectedMeal: (state, action: PayloadAction<MealDetails>) => {
+    setSelectedMeal: (state, action: PayloadAction<MealDetail>) => {
       state.selectedMeal = action.payload;
     },
   },

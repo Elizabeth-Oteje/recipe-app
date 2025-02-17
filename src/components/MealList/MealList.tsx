@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMeals } from '../../redux/mealSlice';
-import { RootState } from '../../redux/store';
-import { Meal } from '../../interfaces/mealInterfaces';
+import { AppDispatch, RootState } from '../../redux/store';
 import './MealList.css';
 
 const MealList: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>(); 
   const navigate = useNavigate();
   const { meals, loading, error } = useSelector((state: RootState) => state.meals);
 
@@ -21,6 +20,7 @@ const MealList: React.FC = () => {
   };
 
   return (
+    <div className='meal-list-container'><h1>Meal List</h1>
     <div className="meal-list">
       {loading && <p>Loading meals...</p>}
       {error && <p>{error}</p>}
@@ -37,6 +37,7 @@ const MealList: React.FC = () => {
           <p>{meal.strArea}</p>
         </div>
       ))}
+    </div>
     </div>
   );
 };

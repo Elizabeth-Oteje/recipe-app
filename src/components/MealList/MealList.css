@@ -1,8 +1,12 @@
-/* Meal List Grid Layout */
+.meal-list-container{
+  padding: 20px 50px;
+}
+
+
 .meal-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px; /* Adjust spacing between items */
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(5, 1fr);
   }
   
   
