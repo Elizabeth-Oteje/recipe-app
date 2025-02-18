@@ -44,14 +44,27 @@
     outline: none;
     margin: auto;
   }
-  
+  .clear-button{
+    background: #CE371C;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 0px;
+    font-size: 16px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+  }
  
+  .clear-button:hover{
+    background: #FF0000;
+  }
   .search-button {
     background: green;
     color: white;
     padding: 8px 12px;
     border: none;
-    cursor: pointer;
     border-radius: 0px;
     font-size: 16px;
     display: flex;
