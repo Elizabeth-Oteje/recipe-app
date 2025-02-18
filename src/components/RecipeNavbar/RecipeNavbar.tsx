@@ -4,6 +4,7 @@ import { fetchMeals } from '../../redux/mealSlice';
 import { AppDispatch } from "../../redux/store";
 import "./RecipeNavbar.css";
 import {debounce} from 'lodash'
+import { Link } from "react-router-dom";
 
 const RecipeNavbar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -29,10 +30,10 @@ const RecipeNavbar: React.FC = () => {
 
   return (
     <nav className="navbar">
-      <div className="logo">
+      <Link to='/' className="logo">
         <span className="logo-text">My</span>
         <span className="logo-pal">Recipe</span>
-      </div>
+      </Link>
 
       <div className="search-container">
         <input

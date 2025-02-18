@@ -10,7 +10,7 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
-import { fetchSimilarMeals } from "../../redux/mealSlice";
+import { fetchMealsByCategory } from "../../redux/mealSlice";
 import { RootState, AppDispatch } from "../../redux/store";
 import "./SimilarMealsTable.css";
 import { Meal } from "../../interfaces/mealInterfaces";
@@ -24,7 +24,7 @@ const SimilarMealsTable = ({ category }: { category: string }) => {
   // Fetch similar meals when category changes
   useEffect(() => {
     if (category) {
-      dispatch(fetchSimilarMeals(category)); 
+      dispatch(fetchMealsByCategory(category)); 
       setPageIndex(0); 
     }
   }, [category, dispatch]);

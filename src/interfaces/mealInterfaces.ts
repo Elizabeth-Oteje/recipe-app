@@ -15,4 +15,9 @@ export interface Meal {
     [key: `strIngredient${number}`]: string | null;
   }
   
-  
+  export interface MealCategory {
+    idCategory: string;
+    strCategory: string;
+    strCategoryThumb: string;
+    strCategoryDescription: string;
+  }

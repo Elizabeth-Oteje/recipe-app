@@ -25,3 +25,9 @@ export const fetchMealsByArea = async (area: string) => {
   const response = await axios.get(`${API_URL}/filter.php?a=${area}`);
   return response.data.meals || [];
 };
+
+// **Fetch meal categories**
+export const fetchMealCategories = async () => {
+  const response = await axios.get(`${API_URL}/categories.php`);
+  return response.data.categories || [];
+};

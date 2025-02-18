@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../redux/store';
 import { fetchMealDetails } from '../../redux/mealSlice'; 
-import SimilarMealsTable from '../SimilarMeals/SimilarMeals';
+// import SimilarMealsTable from '../SimilarMeals/SimilarMeals';
 
 const MealDetails: React.FC = () => {
   const { mealId } = useParams<{ mealId: string }>();  // Get meal ID from URL
@@ -48,7 +48,7 @@ for (let i = 1; i <= 20; i++) {
       <p>{strInstructions}</p>
 
     
-      <SimilarMealsTable category={strCategory} />
+      {/* <SimilarMealsTable category={strCategory} /> */}
     </div>
   );
 };
