@@ -3,13 +3,29 @@ import { useDispatch } from "react-redux";
 import { fetchMeals } from '../../redux/mealSlice';
 import { AppDispatch } from "../../redux/store";
 import "./RecipeNavbar.css";
-
+import {debounce} from 'lodash'
 
 const RecipeNavbar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
    const dispatch = useDispatch<AppDispatch>();
+   const debouncedFetchMeals = debounce((query: string) => {
+    if (query === "") {
+      dispatch(fetchMeals('')); 
+    } else {
+      dispatch(fetchMeals(query)); 
+    }
+  }, 500);
 
- 
+   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value); 
+    debouncedFetchMeals(value); 
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm(""); 
+    dispatch(fetchMeals('')); 
+  };
 
   return (
     <nav className="navbar">
@@ -24,10 +40,10 @@ const RecipeNavbar: React.FC = () => {
           className="search-input"
           placeholder="Search for recipes..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange} 
         />
          {searchTerm ? (
-          <button className="clear-button">
+          <button className="clear-button" onClick={handleClearSearch}>
             X
           </button> 
         ) :
