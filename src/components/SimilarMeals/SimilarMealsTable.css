@@ -21,7 +21,7 @@
   
   /* Table header */
   .meal-table th {
-    background-color: #007bff;
+    background-color: #84BD00;
     color: white;
     padding: 10px;
     text-align: left;
@@ -54,20 +54,7 @@
     border-radius: 5px;
     object-fit: cover;
   }
-  
-  /* View button */
-  .view-btn {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 3px;
-  }
-  
-  .view-btn:hover {
-    background-color: #218838;
-  }
+
   
   /* Pagination */
   .pagination {
@@ -78,7 +65,7 @@
   }
   
   .pagination button {
-    background-color: #007bff;
+    background-color: #84BD00;
     color: white;
     border: none;
     padding: 5px 10px;

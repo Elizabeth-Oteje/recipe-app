@@ -34,7 +34,7 @@ for (let i = 1; i <= 20; i++) {
 
 
   return (
-    <div>
+    <div className='container'>
       <h1>{strMeal}</h1>
       <img src={strMealThumb} alt={strMeal} />
       <p><strong>Category:</strong> {strCategory}</p>
