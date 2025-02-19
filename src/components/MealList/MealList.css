@@ -37,7 +37,7 @@
   }
   
   .meal-card h3 {
-    margin: 10px 0;
+    margin: 5px 0;
     font-size: 1.2rem;
     font-weight: bold;
   }
@@ -89,11 +89,19 @@
   }
   @media screen and (max-width: 576px){
     .meal-list-container{
-      padding: 20px 20px;
+      padding: 10px 20px;
     }
     
+    .meal-list-container h1{
+      font-size: 32px;
+    }
     .meal-list {
       grid-template-columns: repeat(2, 1fr);
+      gap:20px
+    }
+
+    .meal-card img{
+      height:180px
     }
 
     .filter-container{

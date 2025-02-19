@@ -6,6 +6,7 @@ import { addMealLocally } from '../../redux/mealSlice';
 import './AddMeal.css';
 import { AppDispatch } from '../../redux/store';
 import { FaPlus, FaTrash } from 'react-icons/fa';
+import { BsWindowDesktop } from 'react-icons/bs';
 
 interface AddMealModalProps {
   isOpen: boolean;
@@ -103,6 +104,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, closeModal }) => {
       ingredients: [''],
       strInstructions: '',
     }); // Reset form
+    window.location.reload();
   };
   
 
