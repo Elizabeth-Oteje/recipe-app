@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   useReactTable,
-  getFilteredRowModel,
   getCoreRowModel,
   getPaginationRowModel,
-  createColumnHelper,
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
@@ -29,42 +27,44 @@ const SimilarMealsTable = ({ category }: { category: string }) => {
     }
   }, [category, dispatch]);
 
-  const columnHelper = createColumnHelper<Meal>();
+  // const columnHelper = createColumnHelper<Meal>();
 
   const columns: ColumnDef<Meal>[] = [
-    columnHelper.display({
-        id: "S.No",
-        cell: (info) => <span>{info.row.index + 1}</span>,
-        header: "S.No",
-      }),
-    columnHelper.accessor("strMealThumb", {
-      cell: (info) => (
-        <img src={info.getValue()} alt="Meal" className="meal-image" />
-      ),
+    {
+      id: "S.No",
+      header: "S.No",
+      cell: (info) => <span>{info.row.index + 1}</span>,
+    },
+    {
+      accessorKey: "strMealThumb",
       header: "Image",
-    }),
-    columnHelper.accessor("strMeal", {
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => (
+        <img src={info.getValue() as string} alt="Meal" className="meal-image" />
+      ),
+    },
+    {
+      accessorKey: "strMeal",
       header: "Name",
-    }),
-    columnHelper.accessor("idMeal", {
+      cell: (info) => <span>{info.getValue() as string}</span>,
+    },
+    {
+      accessorKey: "idMeal",
+      header: "Action",
       cell: (info) => (
         <button
           className="view-btn"
           onClick={() => {
             setPageIndex(0);
-            navigate(`/meal/${info.getValue()}`);
-            window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to the top smoothly
+            navigate(`/meal/${info.getValue() as string}`);
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
-          
         >
           View
         </button>
       ),
-      header: "Action",
-    }),
+    },
   ];
-
+  
 
 
   const table = useReactTable({

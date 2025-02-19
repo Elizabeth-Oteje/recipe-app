@@ -44,7 +44,7 @@ export const fetchMeals = createAsyncThunk("meals/fetchMeals", async (query: str
 
     if (query !== "") {
       // Filter local meals that match the query
-      const filteredLocalMeals = localMeals.filter((meal) =>
+      const filteredLocalMeals = localMeals.filter((meal: { strMeal: string; }) =>
         meal.strMeal.toLowerCase().includes(query.toLowerCase())
       );
 
@@ -203,8 +203,9 @@ export const fetchMealCategories = createAsyncThunk(
       const localCategories = localCategoryNames.map((category, index) => {
         // Check if category exists in API
         const apiCategory = apiCategories.find(
-          (apiCat) => apiCat.strCategory.toLowerCase() === category.toLowerCase()
+          (apiCat: { strCategory: string }) => apiCat.strCategory.toLowerCase() === (category as string).toLowerCase()
         );
+        
 
         if (apiCategory) {
           // If category exists in API, use the API idCategory
@@ -228,7 +229,7 @@ export const fetchMealCategories = createAsyncThunk(
       const mergedCategories = [
         ...localCategories,
         ...apiCategories.filter(
-          (apiCat) =>
+          (apiCat: { strCategory: string; }) =>
             !localCategories.some(
               (localCat) =>
                 localCat.strCategory.toLowerCase() === apiCat.strCategory.toLowerCase()

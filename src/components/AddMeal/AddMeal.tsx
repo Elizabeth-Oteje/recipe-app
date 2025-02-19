@@ -6,7 +6,7 @@ import { addMealLocally } from '../../redux/mealSlice';
 import './AddMeal.css';
 import { AppDispatch } from '../../redux/store';
 import { FaPlus, FaTrash } from 'react-icons/fa';
-import { BsWindowDesktop } from 'react-icons/bs';
+
 
 interface AddMealModalProps {
   isOpen: boolean;
@@ -72,7 +72,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, closeModal }) => {
     setFormError('');
   
     // Map the ingredients to the expected strIngredient format
-    const ingredients = newMeal.ingredients.reduce((acc: any, ingredient, index) => {
+    const ingredients = newMeal.ingredients.reduce((acc: { [key: string]: string }, ingredient, index) => {
       if (ingredient) {
         acc[`strIngredient${index + 1}`] = ingredient;
       }

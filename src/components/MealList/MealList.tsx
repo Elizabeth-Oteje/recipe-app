@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { fetchMeals, fetchMealCategories, setSelectedArea, setSelectedCategory, fetchMealsByCategory, fetchMealsByArea, setMeals } from '../../redux/mealSlice';
+import { fetchMeals, fetchMealCategories, setSelectedArea, setSelectedCategory, fetchMealsByCategory, fetchMealsByArea } from '../../redux/mealSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import './MealList.css';
 import AddMealModal from '../AddMeal/AddMeal';
+import { Meal } from '../../interfaces/mealInterfaces';
 
 const getInitialMeals = () => {
   const width = window.innerWidth;
@@ -21,7 +22,8 @@ const MealList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>(); 
   const navigate = useNavigate();
   const { meals, loading, error, categories, selectedCategory, selectedArea } = useSelector((state: RootState) => state.meals);
-  const [allMeals, setAllMeals] = useState([]); 
+  const [allMeals, setAllMeals] = useState<Meal[]>([]);
+
    const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [displayedMeals, setDisplayedMeals] = useState<number>(0);
@@ -33,7 +35,9 @@ const MealList: React.FC = () => {
 
     dispatch(fetchMeals('')).then((response) => {
       if (response.payload) {
-        setAllMeals(response.payload); 
+        if (Array.isArray(response.payload)) {
+          setAllMeals(response.payload);
+        } 
       }
     });
   
@@ -136,8 +140,8 @@ const MealList: React.FC = () => {
         <div>
           <h1>Meal List</h1>
           {loading && <p className="loading-error-text">Loading meals...</p>}
-      {error && (meals.length === 0 ||displayedMeals.length === 0) && <p className="loading-error-text">{error}</p>}
-      {!loading && !error && (meals.length === 0 ||displayedMeals.length === 0) && <p className="loading-error-text">No meals found</p>}
+      {error && meals.length === 0 && <p className="loading-error-text">{error}</p>}
+      {!loading && !error && meals.length === 0 && <p className="loading-error-text">No meals found</p>}
           {!loading && meals.length > 0 && (
             <InfiniteScroll
               dataLength={displayedMeals}
