@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { fetchMeals, fetchMealCategories, setSelectedArea, setSelectedCategory, fetchMealsByCategory, fetchMealsByArea, mergeMeals } from '../../redux/mealSlice';
+import { fetchMeals, fetchMealCategories, setSelectedArea, setSelectedCategory, fetchMealsByCategory, fetchMealsByArea, setMeals } from '../../redux/mealSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import './MealList.css';
-import axios from 'axios';
 import AddMealModal from '../AddMeal/AddMeal';
 
 const getInitialMeals = () => {
@@ -22,34 +21,19 @@ const MealList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>(); 
   const navigate = useNavigate();
   const { meals, loading, error, categories, selectedCategory, selectedArea } = useSelector((state: RootState) => state.meals);
-  const allMeals = useSelector((state: RootState) => state.meals.allMeals);
+  const [allMeals, setAllMeals] = useState([]); 
    const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [displayedMeals, setDisplayedMeals] = useState<number>(0);
   const [showEndMessage, setShowEndMessage] = useState(false);
 
-  // useEffect(() => {
-  //   dispatch(fetchMeals('')).then((response) => {
-  //     if (response.payload) {
-  //       setAllMeals(response.payload); // Save the full meals list
-  //     }
-  //   });
-  //   dispatch(fetchMealCategories());
-  // }, [dispatch]);
   
   useEffect(() => {
 
-    // const fetchmeals =async() =>{
-      
-    //   const response = await axios.get('https://www.themealdb.com/api/json/v1/1/search.php?s=');
-
-    //   console.log(response, 'fetch meals')
-    // }
-    // fetchmeals()
 
     dispatch(fetchMeals('')).then((response) => {
       if (response.payload) {
-        dispatch(mergeMeals(response.payload)); // Just pass API meals, Redux handles merging
+        setAllMeals(response.payload); 
       }
     });
   
@@ -100,10 +84,10 @@ const MealList: React.FC = () => {
     const category = e.target.value;
     if (category === "") {
       dispatch(setSelectedCategory(""));
-      dispatch(fetchMeals("")); // Reset meals to default
+       dispatch(fetchMeals(""))
     } else {
       dispatch(setSelectedCategory(category));
-      dispatch(setSelectedArea("")); // Clear area selection
+      dispatch(setSelectedArea("")); 
     }
   };
   
@@ -111,7 +95,7 @@ const MealList: React.FC = () => {
     const area = e.target.value;
     if (area === "") {
       dispatch(setSelectedArea(""));
-      dispatch(fetchMeals("")); // Reset meals to default
+       dispatch(fetchMeals(""))
     } else {
       dispatch(setSelectedArea(area));
       dispatch(setSelectedCategory("")); // Clear category selection
