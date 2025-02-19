@@ -1,22 +1,16 @@
 /* Table container */
 .table-container {
-    width: 80%;
-    margin: 20px auto;
+    width: 100%;
     font-family: Arial, sans-serif;
   }
   
-  /* Search input */
-  .search-input {
-    width: 50%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-  }
+ 
   
   /* Table */
   .meal-table {
-    width: 100%;
+    width: 80%;
     border-collapse: collapse;
+    margin-top: 15px;
   }
   
   /* Table header */
@@ -78,3 +72,9 @@
     cursor: not-allowed;
   }
   
+  @media screen and (max-width: 768px){
+    .meal-table{
+    width: 100%;
+  
+   }
+}

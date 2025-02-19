@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { fetchMeals, fetchMealCategories, setSelectedArea, setSelectedCategory, fetchMealsByCategory, fetchMealsByArea } from '../../redux/mealSlice';
+import { fetchMeals, fetchMealCategories, setSelectedArea, setSelectedCategory, fetchMealsByCategory, fetchMealsByArea, mergeMeals } from '../../redux/mealSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import './MealList.css';
+import axios from 'axios';
+import AddMealModal from '../AddMeal/AddMeal';
 
 const getInitialMeals = () => {
   const width = window.innerWidth;
@@ -20,23 +22,44 @@ const MealList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>(); 
   const navigate = useNavigate();
   const { meals, loading, error, categories, selectedCategory, selectedArea } = useSelector((state: RootState) => state.meals);
-  const [allMeals, setAllMeals] = useState([]); // Stores all meals before filtering
+  const allMeals = useSelector((state: RootState) => state.meals.allMeals);
+   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [displayedMeals, setDisplayedMeals] = useState<number>(0);
   const [showEndMessage, setShowEndMessage] = useState(false);
 
+  // useEffect(() => {
+  //   dispatch(fetchMeals('')).then((response) => {
+  //     if (response.payload) {
+  //       setAllMeals(response.payload); // Save the full meals list
+  //     }
+  //   });
+  //   dispatch(fetchMealCategories());
+  // }, [dispatch]);
+  
   useEffect(() => {
+
+    // const fetchmeals =async() =>{
+      
+    //   const response = await axios.get('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+
+    //   console.log(response, 'fetch meals')
+    // }
+    // fetchmeals()
+
     dispatch(fetchMeals('')).then((response) => {
       if (response.payload) {
-        setAllMeals(response.payload); // Save the full meals list
+        dispatch(mergeMeals(response.payload)); // Just pass API meals, Redux handles merging
       }
     });
+  
     dispatch(fetchMealCategories());
   }, [dispatch]);
   
 
   useEffect(() => {
     if (meals.length > 0) {
+      console.log(meals)
       setDisplayedMeals(getInitialMeals());
     }
   }, [meals]);
@@ -100,7 +123,11 @@ const MealList: React.FC = () => {
   return (
     <div className="container">
       <div className='meal-list-container'>
+        <div className='add-meal-container'>
+      <button onClick={() => setIsModalOpen(true)} className="">Add Meal</button>
+      </div>
         <div className="filter-container">
+          <h3>Filter By:</h3>
           {/* Category Filter */}
           <select onChange={handleCategoryChange} value={selectedCategory || ''}>
             <option value="">All Categories</option>
@@ -125,8 +152,8 @@ const MealList: React.FC = () => {
         <div>
           <h1>Meal List</h1>
           {loading && <p className="loading-error-text">Loading meals...</p>}
-      {error && <p>{error}</p>}
-      {!loading && !error && displayedMeals.length === 0 && <p>No meals found</p>}
+      {error && (meals.length === 0 ||displayedMeals.length === 0) && <p className="loading-error-text">{error}</p>}
+      {!loading && !error && (meals.length === 0 ||displayedMeals.length === 0) && <p className="loading-error-text">No meals found</p>}
           {!loading && meals.length > 0 && (
             <InfiniteScroll
               dataLength={displayedMeals}
@@ -158,6 +185,11 @@ const MealList: React.FC = () => {
           )}
         </div>
       </div>
+      <AddMealModal
+     isOpen={isModalOpen}
+     closeModal={() => setIsModalOpen(false)}
+     
+   />
     </div>
   );
 };

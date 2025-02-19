@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../redux/store';
 import { fetchMealDetails } from '../../redux/mealSlice'; 
-// import SimilarMealsTable from '../SimilarMeals/SimilarMeals';
-
+import SimilarMealsTable from '../SimilarMeals/SimilarMeals';
+import './MealDetails.css';
 const MealDetails: React.FC = () => {
   const { mealId } = useParams<{ mealId: string }>();  // Get meal ID from URL
   const dispatch = useDispatch<AppDispatch>(); 
@@ -19,6 +19,8 @@ const MealDetails: React.FC = () => {
   if (!selectedMeal) {
     return <div>Loading...</div>;
   }
+
+  console.log(selectedMeal, 'selected meal');
 
   const { strMeal, strMealThumb, strCategory, strInstructions } = selectedMeal;
 
@@ -35,20 +37,39 @@ for (let i = 1; i <= 20; i++) {
 
   return (
     <div className='container'>
-      <h1>{strMeal}</h1>
-      <img src={strMealThumb} alt={strMeal} />
-      <p><strong>Category:</strong> {strCategory}</p>
-      <h2>Ingredients</h2>
+    
+        <div className='meal-detail-container'>
+        
+          <div className='detail-container instruction-card'>
+          <img src={strMealThumb} alt={strMeal} className='meal-detail-image' />
+          <div className='meal-details'>
+          <h2>{strMeal}</h2>
+     
+      <h3>Category: <span>{strCategory}</span></h3>
+      <div>
+      <h3>Ingredients</h3>
       <ul>
         {ingredients.map((ingredient, index) => (
           <li key={index}>{ingredient}</li>
         ))}
       </ul>
-      <h2>Instructions</h2>
-      <p>{strInstructions}</p>
+      </div>
+      </div>
+          </div>
+       
+          <div className="instruction-card">
+  <h2>Instructions</h2>
+  <p>{strInstructions}</p>
+</div>
+
+        </div>
+
+        <SimilarMealsTable category={strCategory} />
+      
+     
 
     
-      {/* <SimilarMealsTable category={strCategory} /> */}
+    
     </div>
   );
 };

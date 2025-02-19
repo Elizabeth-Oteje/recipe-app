@@ -11,8 +11,10 @@ export const fetchMeals = async (searchTerm: string = '') => {
 // Fetch meal details by ID
 export const fetchMealDetails = async (mealId: string) => {
   const response = await axios.get(`${API_URL}/lookup.php?i=${mealId}`);
-  return response.data.meals[0] || null;
+  console.log("Raw API Response:", response.data); // Debug
+  return response.data.meals ? response.data.meals[0] : null;
 };
+
 
 // Fetch meals by category
 export const fetchMealsByCategory = async (category: string) => {

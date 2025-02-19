@@ -9,8 +9,8 @@ import {
 
 interface MealState {
   meals: Meal[];
+  allMeals: Meal[];
   selectedMeal: MealDetail | null;
-  similarMeals: Meal[];
   categories: MealCategory[];
   selectedCategory: string | null;
   selectedArea: string | null;
@@ -20,8 +20,8 @@ interface MealState {
 
 const initialState: MealState = {
   meals: [],
+  allMeals:[],
   selectedMeal: null,
-  similarMeals: [],
   categories: [],
   selectedCategory: null,
   selectedArea: null,
@@ -37,9 +37,32 @@ export const fetchMeals = createAsyncThunk('meals/fetchMeals', async (query: str
 
 // Fetch meal details by ID
 export const fetchMealDetails = createAsyncThunk('meals/fetchMealDetails', async (mealId: string) => {
-  const mealDetails = await fetchMealDetailsApi(mealId);
-  return mealDetails;
+  const apiResponse = await fetchMealDetailsApi(mealId);
+  console.log(apiResponse,'thunk')
+  if (apiResponse && typeof apiResponse === "object" &&  Object.keys(apiResponse)?.length > 0) {
+    const mealDetails = apiResponse; // Get first meal from array
+    console.log("Fetched Meal from API:", mealDetails);
+    return mealDetails;
+  }
+  else if(
+    !apiResponse || // null, undefined
+    typeof apiResponse === "string" ||
+    (typeof apiResponse === "object" && Object.keys(apiResponse).length === 0) 
+  ){
+    const localMeals = JSON.parse(localStorage.getItem("meals") || "[]");
+        console.log("Local Storage Meals:", localMeals);
+
+        const mealDetails = localMeals.find((meal: Meal) => meal.idMeal === mealId) || null;
+        console.log("Local Meal Found:", mealDetails);
+
+        // If still not found, reject the request
+        return mealDetails 
+  }
 });
+
+
+
+
 
 // Fetch similar meals by category
 export const fetchMealsByCategory = createAsyncThunk(
@@ -70,13 +93,36 @@ const mealSlice = createSlice({
   initialState,
   reducers: {
     setMeals: (state, action: PayloadAction<Meal[]>) => {
-      state.meals = action.payload;
+      state.meals = [...state.meals, ...action.payload];
     },
+    addMealLocally: (state, action: PayloadAction<Meal>) => {
+      const existingMeal = state.meals.find(meal => meal.idMeal === action.payload.idMeal);
+      if (!existingMeal) {
+        const newMeal = { ...action.payload, timestamp: Date.now() };
+        state.meals.unshift(newMeal); // Add new meal at the top
+        localStorage.setItem('meals', JSON.stringify(state.meals)); // Save updated meals
+      }
+    },
+    
+    
+    
+    mergeMeals: (state, action: PayloadAction<Meal[]>) => {
+      const localMeals = JSON.parse(localStorage.getItem('meals') || '[]');
+    
+      // Place local meals first, then API meals
+      const mergedMeals = [...localMeals, ...action.payload].filter(
+        (meal, index, self) =>
+          index === self.findIndex(m => m.idMeal === meal.idMeal) // Remove duplicates
+      );
+    state.allMeals = mergedMeals;
+      state.meals = mergedMeals;
+      localStorage.setItem('meals', JSON.stringify(mergedMeals));
+    },
+    
+    
+    
     setSelectedMeal: (state, action: PayloadAction<MealDetail>) => {
       state.selectedMeal = action.payload;
-    },
-    setSimilarMeals: (state, action: PayloadAction<Meal[]>) => {
-      state.similarMeals = action.payload;
     },
     setSelectedCategory: (state, action: PayloadAction<string | null>) => {
       state.selectedCategory = action.payload;
@@ -92,8 +138,11 @@ const mealSlice = createSlice({
       })
       .addCase(fetchMeals.fulfilled, (state, action) => {
         state.loading = false;
-        state.meals = action.payload;
+        state.meals = [...state.meals, ...action.payload].filter(
+          (meal, index, self) => index === self.findIndex(m => m.idMeal === meal.idMeal) 
+        );
       })
+      
       .addCase(fetchMeals.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch meals';
@@ -130,10 +179,27 @@ const mealSlice = createSlice({
       .addCase(fetchMealCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch meal categories';
+      })
+      .addCase(fetchMealDetails.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchMealDetails.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.selectedMeal = action.payload;
+        } else {
+          state.error = "Meal details not found.";
+        }
+        state.loading = false;
+      })
+      
+      .addCase(fetchMealDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch meal details';
       });
+    
   }
   
 });
 
-export const { setMeals, setSelectedMeal, setSimilarMeals, setSelectedCategory, setSelectedArea } = mealSlice.actions;
+export const { setMeals, addMealLocally, mergeMeals, setSelectedMeal,setSelectedCategory, setSelectedArea } = mealSlice.actions;
 export default mealSlice.reducer;

@@ -18,7 +18,7 @@ import { Meal } from "../../interfaces/mealInterfaces";
 const SimilarMealsTable = ({ category }: { category: string }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const meals = useSelector((state: RootState) => state.meals.similarMeals);
+  const meals = useSelector((state: RootState) => state.meals.meals);
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   // Fetch similar meals when category changes
@@ -84,7 +84,7 @@ const SimilarMealsTable = ({ category }: { category: string }) => {
 
   return (
     <div className="table-container">
-     
+     <h3>Look at similar meals:</h3>
 
       <table className="meal-table">
         <thead>

@@ -3,14 +3,20 @@
   margin-top: 30px;
 }
 
+
 .meal-list {
   margin-top: 30px;
   display: grid;
   gap: 30px;
   grid-template-columns: repeat(5, 1fr);
+  margin-bottom: 20px;
 
   }
   
+
+.meal-list::-webkit-scrollbar {
+  display: none; 
+}
 
   
   /* Meal Card Style */
@@ -45,26 +51,43 @@
     transform: scale(1.05);
     transform-origin: center;
   }
-  
-  @media (max-width: 1199px) and (min-width: 992px) {
+  .filter-container {
+    display: flex;
+    gap:10px;
+    justify-content: end;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  .filter-container select{
+    padding: 8px 12px;
+    border: 1px solid #84BD00;
+  }
+  .add-meal-container{
+    display: none;
+  }
+  @media screen and (max-width: 1200px){
     .meal-list {
       grid-template-columns: repeat(5, 1fr);
     }
   }
   
-  @media (max-width: 991px) and (min-width: 768px) {
+  @media screen and (max-width: 992px){
     .meal-list {
       grid-template-columns: repeat(4, 1fr);
     }
   }
   
-  @media (max-width: 767px) {
+  @media screen and (max-width: 768px){
     .meal-list {
       grid-template-columns: repeat(3, 1fr);
     }
+    .add-meal-container{
+      display: flex;
+      justify-content: end;
+      margin-bottom: 20px;
+    }
   }
-
-  @media (max-width: 576px) {
+  @media screen and (max-width: 576px){
     .meal-list-container{
       padding: 20px 20px;
     }
@@ -72,4 +95,12 @@
     .meal-list {
       grid-template-columns: repeat(2, 1fr);
     }
+
+    .filter-container{
+    gap: 6px;
+    }
+    .filter-container h3{
+      font-size: 16px;
+      }
+     
   }
