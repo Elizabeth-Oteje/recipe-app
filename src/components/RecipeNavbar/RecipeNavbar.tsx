@@ -6,7 +6,6 @@ import "./RecipeNavbar.css";
 import {debounce} from 'lodash'
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AddMealModal from "../AddMeal/AddMeal";
-import { Meal } from "../../interfaces/mealInterfaces";
 import { FaSearch } from "react-icons/fa";
 
 
