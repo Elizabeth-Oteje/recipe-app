@@ -17,7 +17,7 @@ const MealDetails: React.FC = () => {
   }, [mealId, dispatch]);
 
   if (!selectedMeal) {
-    return <div>Loading...</div>;
+    return <div>Meal not found</div>;
   }
 
 
