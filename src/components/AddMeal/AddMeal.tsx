@@ -112,11 +112,11 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, closeModal }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" data-testid="modal-container">
     <div className="modal">
       <div className="modal-header">
       <h2>Add a New Meal</h2>
-      <button onClick={closeModal} className="close-icon">&times;</button>
+      <button onClick={closeModal} className="close-icon" data-testid="close-button">&times;</button>
     
       </div>
       

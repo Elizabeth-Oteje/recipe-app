@@ -43,36 +43,45 @@ const RecipeNavbar: React.FC = () => {
 
   return (
     <>
-    <nav className="navbar">
-   
-      <Link to='/' className="logo">
-        <span className="logo-text">My</span>
-        <span className="logo-pal">Recipe</span>
-      </Link>
+    <nav className="navbar" data-testid="recipe-navbar">
+        <Link to='/' className="logo" data-testid="navbar-logo">
+          <span className="logo-text">My</span>
+          <span className="logo-pal">Recipe</span>
+        </Link>
 
-      <div className="search-container">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Search for recipes..."
-          value={searchTerm}
-          onChange={handleSearchChange} 
-          onFocus={handleFocus} 
-        />
-         {searchTerm ? (
-          <button className="clear-button" onClick={handleClearSearch}>
-            X
-          </button> 
-        ) :
-        <button className="search-button">
-        <FaSearch/>
-        </button>}
-      </div>
-      <div>
-    
-      <button onClick={() => setIsModalOpen(true)} className="navbar-btn">Add Meal</button>
-      </div>
-    </nav>
+        <div className="search-container" data-testid="search-container">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search for recipes..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            onFocus={handleFocus}
+            data-testid="search-input"
+          />
+          {searchTerm ? (
+            <button 
+              className="clear-button" 
+              onClick={handleClearSearch}
+              data-testid="clear-button"
+            >
+              X
+            </button>
+          ) : (
+            <button className="search-button" data-testid="search-button">
+              <FaSearch />
+            </button>
+          )}
+        </div>
+
+        <button 
+          onClick={() => setIsModalOpen(true)} 
+          className="navbar-btn"
+          data-testid="add-meal-button"
+        >
+          Add Meal
+        </button>
+      </nav>
      <AddMealModal
      isOpen={isModalOpen}
      closeModal={() => setIsModalOpen(false)}
