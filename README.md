@@ -3,12 +3,12 @@ A modern, high-performance Recipe App built with React 19, TypeScript, and Vite.
 
 
 ## Tech Stack
-Frontend: React 19, TypeScript, React Router
-State Management: Redux Toolkit
-API Handling: Axios
-Utilities: Lodash, UUID, React Infinite Scroll
-Testing: Jest, React Testing Library
-Build Tool: Vite
+- **Frontend**: React 19, TypeScript, React Router
+- **State Management**: Redux Toolkit
+- **API Handling**: Axios
+- **Utilities**: Lodash, UUID, React Infinite Scroll
+- **Testing**: Jest, React Testing Library
+- **Build Tool**: Vite
 
 
 ## Getting Started
@@ -87,16 +87,16 @@ maintainable:
 ```
 
 📌 Key Features
-✅ Fast Performance: Uses Vite for lightning-fast builds.
-✅ State Management: Uses Redux Toolkit with persistence.
-✅ Infinite Scrolling: Implements lazy loading with react-infinite-scroll-component.
-✅ Testing: Includes Jest and React Testing Library for unit and integration testing.
+- Fast Performance: Uses Vite for lightning-fast builds.
+- State Management: Uses Redux Toolkit with persistence.
+- Infinite Scrolling: Implements lazy loading with react-infinite-scroll-component.
+- Testing: Includes Jest and React Testing Library for unit and integration testing.
 
 ✨ Contributing
-Fork the repository.
-Create a new branch: git checkout -b feature-name
-Commit your changes: git commit -m "Added new feature"
-Push to the branch: git push origin feature-name
-Open a Pull Request.
+- Fork the repository.
+- Create a new branch: git checkout -b feature-name
+- Commit your changes: git commit -m "Added new feature"
+- Push to the branch: git push origin feature-name
+- Open a Pull Request.
 
 
