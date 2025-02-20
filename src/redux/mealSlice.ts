@@ -56,9 +56,9 @@ export const fetchMeals = createAsyncThunk("meals/fetchMeals", async (query: str
     }
 
    
-    if (mergedMeals.length === 0) {
-      throw new Error("No meals found.");
-    }
+    // if (mergedMeals.length === 0) {
+    //   throw new Error("No meals found.");
+    // }
 
     return mergedMeals;
   } catch (error) {
@@ -239,20 +239,27 @@ const mealSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Fetch Meals
       .addCase(fetchMeals.pending, (state) => {
         state.loading = true;
+        state.error = null; // Reset error when fetching starts
       })
       .addCase(fetchMeals.fulfilled, (state, action) => {
         state.loading = false;
-        state.meals = state.meals = action.payload;
+        state.meals = action.payload;
+        if (action.payload.length === 0) {
+          state.error = "No meals found.";
+        }
       })
-      
       .addCase(fetchMeals.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch meals';
       })
+  
+      // Fetch Meals by Category
       .addCase(fetchMealsByCategory.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchMealsByCategory.fulfilled, (state, action) => {
         state.loading = false;
@@ -260,10 +267,13 @@ const mealSlice = createSlice({
       })
       .addCase(fetchMealsByCategory.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch meals by category';
+        state.error = `Failed to fetch meals for category: ${action.error.message}`;
       })
+  
+      // Fetch Meals by Area
       .addCase(fetchMealsByArea.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchMealsByArea.fulfilled, (state, action) => {
         state.loading = false;
@@ -271,10 +281,27 @@ const mealSlice = createSlice({
       })
       .addCase(fetchMealsByArea.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch meals by area';
+        state.error = `Failed to fetch meals for area: ${action.error.message}`;
       })
+  
+      // Fetch Meal Details
+      .addCase(fetchMealDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMealDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedMeal = action.payload;
+      })
+      .addCase(fetchMealDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = `Failed to fetch meal details: ${action.error.message}`;
+      })
+  
+      // Fetch Meal Categories
       .addCase(fetchMealCategories.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchMealCategories.fulfilled, (state, action) => {
         state.loading = false;
@@ -282,26 +309,10 @@ const mealSlice = createSlice({
       })
       .addCase(fetchMealCategories.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch meal categories';
-      })
-      .addCase(fetchMealDetails.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchMealDetails.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.selectedMeal = action.payload;
-        } else {
-          state.error = "Meal details not found.";
-        }
-        state.loading = false;
-      })
-      
-      .addCase(fetchMealDetails.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to fetch meal details';
+        state.error = `Failed to fetch meal categories: ${action.error.message}`;
       });
-    
   }
+  
   
 });
 
