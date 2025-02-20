@@ -6,6 +6,7 @@ import { addMealLocally } from '../../redux/mealSlice';
 import './AddMeal.css';
 import { AppDispatch } from '../../redux/store';
 import { FaPlus, FaTrash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 
 interface AddMealModalProps {
@@ -15,7 +16,7 @@ interface AddMealModalProps {
 
 const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, closeModal }) => {
    const dispatch = useDispatch<AppDispatch>();;
-  
+  const navigate = useNavigate();
 
 
   const [newMeal, setNewMeal] = useState({
@@ -94,8 +95,6 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, closeModal }) => {
     dispatch(addMealLocally(mealToAdd));
 
     
-    
-    closeModal(); // Close modal after adding meal
     setNewMeal({
       strMeal: '',
       strCategory: '',
@@ -103,8 +102,10 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, closeModal }) => {
       strMealThumb: '',
       ingredients: [''],
       strInstructions: '',
-    }); // Reset form
-    window.location.reload();
+    });
+    closeModal(); // Close modal after adding meal
+     // Reset form
+    navigate('/')
   };
   
 
