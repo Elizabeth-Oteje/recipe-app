@@ -1,0 +1,7 @@
+
+# Catch-all redirect for SPA routing:
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
