@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid'; // For generating a unique ID
+import { v4 as uuidv4 } from 'uuid'; 
 import { Meal } from '../../interfaces/mealInterfaces';
 import { addMealLocally } from '../../redux/mealSlice';
 import './AddMeal.css';
@@ -24,11 +24,11 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, closeModal }) => {
     strCategory: '',
     strArea: '',
     strMealThumb: '',
-    ingredients: [''], // To store ingredients
-    strInstructions: '', // To store instructions
+    ingredients: [''], 
+    strInstructions: '', 
   });
   const [formError, setFormError] = useState('');
-  const [imagePreview, setImagePreview] = useState<string | null>(null); // For image preview
+  const [imagePreview, setImagePreview] = useState<string | null>(null); 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setNewMeal({ ...newMeal, [e.target.name]: e.target.value });
@@ -103,8 +103,7 @@ const AddMealModal: React.FC<AddMealModalProps> = ({ isOpen, closeModal }) => {
       ingredients: [''],
       strInstructions: '',
     });
-    closeModal(); // Close modal after adding meal
-     // Reset form
+    closeModal(); 
     navigate('/')
   };
   

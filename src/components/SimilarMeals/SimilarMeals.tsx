@@ -19,7 +19,7 @@ const SimilarMealsTable = ({ category }: { category: string }) => {
   const meals = useSelector((state: RootState) => state.meals.meals);
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(5);
-  // Fetch similar meals when category changes
+
   useEffect(() => {
     if (category) {
       dispatch(fetchMealsByCategory(category)); 
@@ -27,7 +27,7 @@ const SimilarMealsTable = ({ category }: { category: string }) => {
     }
   }, [category, dispatch]);
 
-  // const columnHelper = createColumnHelper<Meal>();
+  
 
   const columns: ColumnDef<Meal>[] = [
     {

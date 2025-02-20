@@ -21,7 +21,7 @@ const LOAD_MORE_COUNT = 10; // Meals per scroll
 const MealList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>(); 
   const navigate = useNavigate();
-  const { meals, loading, error, categories, selectedCategory, selectedArea } = useSelector((state: RootState) => state.meals);
+  const { meals, mealsError, mealsLoading, categories,categoriesLoading,categoriesError, selectedCategory, selectedArea, mealsByAreaError,mealsByAreaLoading,mealsByCategoryError,mealsByCategoryLoading,searchLoading } = useSelector((state: RootState) => state.meals);
   const [allMeals, setAllMeals] = useState<Meal[]>([]);
 
    const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,10 +54,10 @@ const MealList: React.FC = () => {
 
   useEffect(() => {
     if (selectedCategory) {
-      dispatch(fetchMealsByCategory(selectedCategory)); // Pass only the category name
+      dispatch(fetchMealsByCategory(selectedCategory)); 
     } 
     if (selectedArea) {
-      dispatch(fetchMealsByArea(selectedArea)); // Pass only the area name
+      dispatch(fetchMealsByArea(selectedArea)); 
     }
   }, [selectedCategory, selectedArea, dispatch]);
   
@@ -102,7 +102,7 @@ const MealList: React.FC = () => {
        dispatch(fetchMeals(""))
     } else {
       dispatch(setSelectedArea(area));
-      dispatch(setSelectedCategory("")); // Clear category selection
+      dispatch(setSelectedCategory("")); 
     }
   };
   
@@ -119,7 +119,9 @@ const MealList: React.FC = () => {
           {/* Category Filter */}
           <select onChange={handleCategoryChange} value={selectedCategory || ''}>
             <option value="">All Categories</option>
-            {categories.map((category) => (
+            {categoriesLoading && <option>Loading Categories...</option>}
+            {categoriesError && <option>{categoriesError}</option>}
+            {!categoriesLoading && categories.map((category) => (
               <option key={category.idCategory} value={category.strCategory}>
                 {category.strCategory}
               </option>
@@ -139,10 +141,40 @@ const MealList: React.FC = () => {
 
         <div>
           <h1>Meal List</h1>
-          {loading && <p className="loading-error-text">Loading meals...</p>}
-      {error && meals.length === 0 && <p className="loading-error-text">{error}</p>}
-      {!loading && !error && meals.length === 0 && <p className="loading-error-text">No meals found</p>}
-          {!loading && meals.length > 0 && (
+          {mealsLoading && !selectedCategory && !selectedArea && (
+    <p className="loading-error-text">Loading meals...</p>
+  )}
+  {mealsError && meals.length === 0 && !selectedCategory && !selectedArea && (
+    <p className="loading-error-text">{mealsError}</p>
+  )}
+{searchLoading && <p className="loading-error-text">Loading search results...</p>}
+
+  {/* Filtering by Category */}
+  {selectedCategory && mealsByCategoryLoading && (
+    <p className="loading-error-text">Loading meals by category...</p>
+  )}
+  {selectedCategory && mealsByCategoryError && (
+    <p className="loading-error-text">{mealsByCategoryError}</p>
+  )}
+
+  {/* Filtering by Area */}
+  {selectedArea && mealsByAreaLoading && (
+    <p className="loading-error-text">Loading meals by area...</p>
+  )}
+  {selectedArea && mealsByAreaError && (
+    <p className="loading-error-text">{mealsByAreaError}</p>
+  )}
+
+  {/* No Meals Found */}
+  {!mealsLoading &&
+    !mealsError &&
+    !mealsByCategoryLoading &&
+    !mealsByAreaLoading && !searchLoading &&
+    meals.length === 0 && (
+      <p className="loading-error-text">No meals found</p>
+  )}
+         
+          {!mealsLoading && !categoriesLoading && !mealsByAreaLoading && !mealsByCategoryLoading && !searchLoading && meals.length > 0 && (
             <InfiniteScroll
               dataLength={displayedMeals}
               next={fetchMoreMeals}

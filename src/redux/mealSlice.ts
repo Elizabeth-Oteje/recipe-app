@@ -7,14 +7,24 @@ import {
   fetchMealCategories as fetchMealCategoriesApi, fetchMealsByArea as  fetchMealsByAreaApi
 } from '../api/mealApi';
 
+
 interface MealState {
   meals: Meal[];
   selectedMeal: MealDetail | null;
   categories: MealCategory[];
   selectedCategory: string | null;
   selectedArea: string | null;
-  loading: boolean;
-  error: string | null;
+  mealsLoading: boolean;
+  mealsError: string | null;
+  detailsLoading: boolean;
+  detailsError: string | null;
+  mealsByCategoryLoading: boolean;
+  mealsByCategoryError: string | null;
+  mealsByAreaLoading: boolean;
+  mealsByAreaError: string | null;
+  categoriesLoading: boolean;
+  categoriesError: string | null;
+  searchLoading: boolean;
 }
 
 const initialState: MealState = {
@@ -23,9 +33,20 @@ const initialState: MealState = {
   categories: [],
   selectedCategory: null,
   selectedArea: null,
-  loading: false,
-  error: null,
+  mealsLoading: false,
+  mealsError: null,
+  detailsLoading: false,
+  detailsError: null,
+  mealsByCategoryLoading: false,
+  mealsByCategoryError: null,
+  mealsByAreaLoading: false,
+  mealsByAreaError: null,
+  categoriesLoading: false,
+  categoriesError: null,
+  searchLoading: false,
 };
+
+
 
 // Fetch meals
 export const fetchMeals = createAsyncThunk("meals/fetchMeals", async (query: string) => {
@@ -55,11 +76,7 @@ export const fetchMeals = createAsyncThunk("meals/fetchMeals", async (query: str
       );
     }
 
-   
-    // if (mergedMeals.length === 0) {
-    //   throw new Error("No meals found.");
-    // }
-
+  
     return mergedMeals;
   } catch (error) {
     console.error("Error fetching meals:", error);
@@ -222,8 +239,8 @@ const mealSlice = createSlice({
       const existingMeal = state.meals.find(meal => meal.idMeal === action.payload.idMeal);
       if (!existingMeal) {
         const newMeal = { ...action.payload, timestamp: Date.now() };
-        state.meals.unshift(newMeal); // Add new meal at the top
-        localStorage.setItem('meals', JSON.stringify(state.meals)); // Save updated meals
+        state.meals.unshift(newMeal); 
+        localStorage.setItem('meals', JSON.stringify(state.meals)); 
       }
     },
     
@@ -238,80 +255,152 @@ const mealSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      // Fetch Meals
-      .addCase(fetchMeals.pending, (state) => {
-        state.loading = true;
-        state.error = null; // Reset error when fetching starts
-      })
-      .addCase(fetchMeals.fulfilled, (state, action) => {
-        state.loading = false;
-        state.meals = action.payload;
-        if (action.payload.length === 0) {
-          state.error = "No meals found.";
-        }
-      })
-      .addCase(fetchMeals.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to fetch meals';
-      })
+      builder
+        .addCase(fetchMeals.pending, (state,action) => {
+          const query = action.meta.arg; 
+      if (query) {
+        
+        state.mealsLoading = false;
+        state.searchLoading = true;
+        state.mealsError = null;
+      }
+      else{
+          state.mealsLoading = true;
+          state.mealsError = null;}
+        })
+        .addCase(fetchMeals.fulfilled, (state, action) => {
+          state.searchLoading = false;
+          state.mealsLoading = false;
+          state.meals = action.payload;
+        })
+        .addCase(fetchMeals.rejected, (state, action) => {
+          state.searchLoading = false;
+          state.mealsLoading = false;
+          state.mealsError = action.error.message || 'Failed to fetch meals';
+        })
+        .addCase(fetchMealDetails.pending, (state) => {
+          state.detailsLoading = true;
+          state.detailsError = null;
+        })
+        .addCase(fetchMealDetails.fulfilled, (state, action) => {
+          state.detailsLoading = false;
+          state.selectedMeal = action.payload;
+        })
+        .addCase(fetchMealDetails.rejected, (state, action) => {
+          state.detailsLoading = false;
+          state.detailsError = action.error.message || 'Failed to fetch meal details';
+        })
+        .addCase(fetchMealsByCategory.pending, (state) => {
+          state.mealsByCategoryLoading = true;
+          state.mealsByCategoryError = null;
+        })
+        .addCase(fetchMealsByCategory.fulfilled, (state, action) => {
+          state.mealsByCategoryLoading = false;
+          state.meals = action.payload;
+        })
+        .addCase(fetchMealsByCategory.rejected, (state, action) => {
+          state.mealsByCategoryLoading = false;
+          state.mealsByCategoryError = action.error.message || 'Failed to fetch meals by category';
+        })
+        .addCase(fetchMealsByArea.pending, (state) => {
+          state.mealsByAreaLoading = true;
+          state.mealsByAreaError = null;
+        })
+        .addCase(fetchMealsByArea.fulfilled, (state, action) => {
+          state.mealsByAreaLoading = false;
+          state.meals = action.payload;
+        })
+        .addCase(fetchMealsByArea.rejected, (state, action) => {
+          state.mealsByAreaLoading = false;
+          state.mealsByAreaError = action.error.message || 'Failed to fetch meals by area';
+        })
+        .addCase(fetchMealCategories.pending, (state) => {
+          state.categoriesLoading = true;
+          state.categoriesError = null;
+        })
+        .addCase(fetchMealCategories.fulfilled, (state, action) => {
+          state.categoriesLoading = false;
+          state.categories = action.payload;
+        })
+        .addCase(fetchMealCategories.rejected, (state, action) => {
+          state.categoriesLoading = false;
+          state.categoriesError = action.error.message || 'Failed to fetch meal categories';
+        });
+    },
+    // builder
+    //   // Fetch Meals
+    //   .addCase(fetchMeals.pending, (state) => {
+    //     state.loading = true;
+    //     state.error = null; 
+    //   })
+    //   .addCase(fetchMeals.fulfilled, (state, action) => {
+    //     state.loading = false;
+    //     state.meals = action.payload;
+    //     if (action.payload.length === 0) {
+    //       state.error = "No meals found.";
+    //     }
+    //   })
+    //   .addCase(fetchMeals.rejected, (state, action) => {
+    //     state.loading = false;
+    //     state.error = action.error.message || 'Failed to fetch meals';
+    //   })
   
-      // Fetch Meals by Category
-      .addCase(fetchMealsByCategory.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchMealsByCategory.fulfilled, (state, action) => {
-        state.loading = false;
-        state.meals = action.payload;
-      })
-      .addCase(fetchMealsByCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = `Failed to fetch meals for category: ${action.error.message}`;
-      })
+    //   // Fetch Meals by Category
+    //   .addCase(fetchMealsByCategory.pending, (state) => {
+    //     state.loading = true;
+    //     state.error = null;
+    //   })
+    //   .addCase(fetchMealsByCategory.fulfilled, (state, action) => {
+    //     state.loading = false;
+    //     state.meals = action.payload;
+    //   })
+    //   .addCase(fetchMealsByCategory.rejected, (state, action) => {
+    //     state.loading = false;
+    //     state.error = `Failed to fetch meals for category: ${action.error.message}`;
+    //   })
   
-      // Fetch Meals by Area
-      .addCase(fetchMealsByArea.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchMealsByArea.fulfilled, (state, action) => {
-        state.loading = false;
-        state.meals = action.payload;
-      })
-      .addCase(fetchMealsByArea.rejected, (state, action) => {
-        state.loading = false;
-        state.error = `Failed to fetch meals for area: ${action.error.message}`;
-      })
+    //   // Fetch Meals by Area
+    //   .addCase(fetchMealsByArea.pending, (state) => {
+    //     state.loading = true;
+    //     state.error = null;
+    //   })
+    //   .addCase(fetchMealsByArea.fulfilled, (state, action) => {
+    //     state.loading = false;
+    //     state.meals = action.payload;
+    //   })
+    //   .addCase(fetchMealsByArea.rejected, (state, action) => {
+    //     state.loading = false;
+    //     state.error = `Failed to fetch meals for area: ${action.error.message}`;
+    //   })
   
-      // Fetch Meal Details
-      .addCase(fetchMealDetails.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchMealDetails.fulfilled, (state, action) => {
-        state.loading = false;
-        state.selectedMeal = action.payload;
-      })
-      .addCase(fetchMealDetails.rejected, (state, action) => {
-        state.loading = false;
-        state.error = `Failed to fetch meal details: ${action.error.message}`;
-      })
+    //   // Fetch Meal Details
+    //   .addCase(fetchMealDetails.pending, (state) => {
+    //     state.loading = true;
+    //     state.error = null;
+    //   })
+    //   .addCase(fetchMealDetails.fulfilled, (state, action) => {
+    //     state.loading = false;
+    //     state.selectedMeal = action.payload;
+    //   })
+    //   .addCase(fetchMealDetails.rejected, (state, action) => {
+    //     state.loading = false;
+    //     state.error = `Failed to fetch meal details: ${action.error.message}`;
+    //   })
   
-      // Fetch Meal Categories
-      .addCase(fetchMealCategories.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchMealCategories.fulfilled, (state, action) => {
-        state.loading = false;
-        state.categories = action.payload;
-      })
-      .addCase(fetchMealCategories.rejected, (state, action) => {
-        state.loading = false;
-        state.error = `Failed to fetch meal categories: ${action.error.message}`;
-      });
-  }
+    //   // Fetch Meal Categories
+    //   .addCase(fetchMealCategories.pending, (state) => {
+    //     state.loading = true;
+    //     state.error = null;
+    //   })
+    //   .addCase(fetchMealCategories.fulfilled, (state, action) => {
+    //     state.loading = false;
+    //     state.categories = action.payload;
+    //   })
+    //   .addCase(fetchMealCategories.rejected, (state, action) => {
+    //     state.loading = false;
+    //     state.error = `Failed to fetch meal categories: ${action.error.message}`;
+    //   });
+  
   
   
 });

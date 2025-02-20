@@ -6,7 +6,7 @@ import { fetchMealDetails } from '../../redux/mealSlice';
 import SimilarMealsTable from '../../components/SimilarMeals/SimilarMeals';
 import './MealDetails.css';
 const MealDetails: React.FC = () => {
-  const { mealId } = useParams<{ mealId: string }>();  // Get meal ID from URL
+  const { mealId } = useParams<{ mealId: string }>();  
   const dispatch = useDispatch<AppDispatch>(); 
   const selectedMeal = useSelector((state: RootState) => state.meals.selectedMeal);
 
