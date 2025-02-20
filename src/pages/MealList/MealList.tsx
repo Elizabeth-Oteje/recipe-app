@@ -5,7 +5,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { fetchMeals, fetchMealCategories, setSelectedArea, setSelectedCategory, fetchMealsByCategory, fetchMealsByArea } from '../../redux/mealSlice';
 import { AppDispatch, RootState } from '../../redux/store';
 import './MealList.css';
-import AddMealModal from '../AddMeal/AddMeal';
+import AddMealModal from '../../components/AddMeal/AddMeal';
 import { Meal } from '../../interfaces/mealInterfaces';
 
 const getInitialMeals = () => {
@@ -47,7 +47,7 @@ const MealList: React.FC = () => {
 
   useEffect(() => {
     if (meals.length > 0) {
-      console.log(meals)
+      
       setDisplayedMeals(getInitialMeals());
     }
   }, [meals]);

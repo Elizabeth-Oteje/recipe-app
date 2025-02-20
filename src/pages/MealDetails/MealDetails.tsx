@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../redux/store';
 import { fetchMealDetails } from '../../redux/mealSlice'; 
-import SimilarMealsTable from '../SimilarMeals/SimilarMeals';
+import SimilarMealsTable from '../../components/SimilarMeals/SimilarMeals';
 import './MealDetails.css';
 const MealDetails: React.FC = () => {
   const { mealId } = useParams<{ mealId: string }>();  // Get meal ID from URL
@@ -20,7 +20,6 @@ const MealDetails: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  console.log(selectedMeal, 'selected meal');
 
   const { strMeal, strMealThumb, strCategory, strInstructions } = selectedMeal;
 

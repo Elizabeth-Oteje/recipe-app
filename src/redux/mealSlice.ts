@@ -30,16 +30,12 @@ const initialState: MealState = {
 // Fetch meals
 export const fetchMeals = createAsyncThunk("meals/fetchMeals", async (query: string) => {
   try {
-    console.log(`Fetching meals with query: "${query}"...`);
-
-    // Fetch meals from API
+   
     const apiMeals = await fetchMealsApi(query);
-    console.log("Meals found in API:", apiMeals);
 
     // Fetch meals from local storage
     const localMeals = JSON.parse(localStorage.getItem("meals") || "[]");
-    console.log("Meals found in Local Storage:", localMeals);
-
+  
     let mergedMeals = [];
 
     if (query !== "") {
@@ -47,8 +43,6 @@ export const fetchMeals = createAsyncThunk("meals/fetchMeals", async (query: str
       const filteredLocalMeals = localMeals.filter((meal: { strMeal: string; }) =>
         meal.strMeal.toLowerCase().includes(query.toLowerCase())
       );
-
-      console.log("Filtered Local Meals:", filteredLocalMeals);
 
       // Merge filtered local meals with API meals, ensuring no duplicates
       mergedMeals = [...filteredLocalMeals, ...apiMeals].filter(
@@ -61,9 +55,7 @@ export const fetchMeals = createAsyncThunk("meals/fetchMeals", async (query: str
       );
     }
 
-    console.log("Final Merged Meals:", mergedMeals);
-
-    // If no meals are found in both sources, throw an error
+   
     if (mergedMeals.length === 0) {
       throw new Error("No meals found.");
     }
@@ -80,24 +72,19 @@ export const fetchMeals = createAsyncThunk("meals/fetchMeals", async (query: str
 // Fetch meal details by ID
 export const fetchMealDetails = createAsyncThunk('meals/fetchMealDetails', async (mealId: string) => {
   const apiResponse = await fetchMealDetailsApi(mealId);
-  console.log(apiResponse,'thunk')
   if (apiResponse && typeof apiResponse === "object" &&  Object.keys(apiResponse)?.length > 0) {
-    const mealDetails = apiResponse; // Get first meal from array
-    console.log("Fetched Meal from API:", mealDetails);
+    const mealDetails = apiResponse; 
     return mealDetails;
   }
   else if(
-    !apiResponse || // null, undefined
+    !apiResponse || 
     typeof apiResponse === "string" ||
     (typeof apiResponse === "object" && Object.keys(apiResponse).length === 0) 
   ){
     const localMeals = JSON.parse(localStorage.getItem("meals") || "[]");
-        console.log("Local Storage Meals:", localMeals);
-
+       
         const mealDetails = localMeals.find((meal: Meal) => meal.idMeal === mealId) || null;
-        console.log("Local Meal Found:", mealDetails);
-
-        // If still not found, reject the request
+        
         return mealDetails 
   }
 });
@@ -108,16 +95,13 @@ export const fetchMealsByCategory = createAsyncThunk(
   "meals/fetchMealsByCategory",
   async (category: string) => {
     try {
-      console.log(`Fetching meals for category: ${category} from API...`);
-
+     
       // Fetch meals from API
       const apiMeals = await fetchMealsByCategoryApi(category);
-      console.log("API Meals:", apiMeals);
-
+    
       // Fetch meals from local storage
       const localMeals = JSON.parse(localStorage.getItem("meals") || "[]");
-      console.log("Local Storage Meals:", localMeals);
-
+    
       // Filter local meals that match the given category but are NOT in the API response
       const localMealsNotInApi = localMeals.filter(
         (meal: Meal) =>
@@ -127,12 +111,10 @@ export const fetchMealsByCategory = createAsyncThunk(
           )
       );
 
-      console.log("Local Meals Not in API:", localMealsNotInApi);
-
+     
       // Merge local meals first, then API meals (ensuring no duplicates)
       const mergedMeals = [...localMealsNotInApi, ...apiMeals];
 
-      console.log("Final Merged Meals:", mergedMeals);
       return mergedMeals;
     } catch (error) {
       console.error(`Error fetching meals for category ${category}:`, error);
@@ -146,15 +128,11 @@ export const fetchMealsByArea = createAsyncThunk(
   "meals/fetchMealsByArea",
   async (area: string) => {
     try {
-      console.log(`Fetching meals for area: ${area} from API...`);
-
-      // Fetch meals from API
+     
       const apiMeals = await fetchMealsByAreaApi(area);
-      console.log("API Meals:", apiMeals);
 
       // Fetch meals from local storage
       const localMeals = JSON.parse(localStorage.getItem("meals") || "[]");
-      console.log("Local Storage Meals:", localMeals);
 
       // Filter local meals that match the given area but are NOT in the API response
       const localMealsNotInApi = localMeals.filter(
@@ -165,12 +143,10 @@ export const fetchMealsByArea = createAsyncThunk(
           )
       );
 
-      console.log("Local Meals Not in API:", localMealsNotInApi);
+     
 
-      // Merge local meals first, then API meals (ensuring no duplicates)
+      
       const mergedMeals = [...localMealsNotInApi, ...apiMeals];
-
-      console.log("Final Merged Meals:", mergedMeals);
       return mergedMeals;
     } catch (error) {
       console.error(`Error fetching meals for area ${area}:`, error);
@@ -184,17 +160,11 @@ export const fetchMealCategories = createAsyncThunk(
   "meals/fetchMealCategories",
   async () => {
     try {
-      console.log("Fetching categories from API...");
-
-      // Fetch categories from API
+      
       const apiCategories = await fetchMealCategoriesApi();
-      console.log("API Categories:", apiCategories);
-
-      // Fetch meals from local storage
+     
       const localMeals = JSON.parse(localStorage.getItem("meals") || "[]");
-      console.log("Local Storage Meals:", localMeals);
-
-      // Extract unique category names from local meals
+   
       const localCategoryNames = [
         ...new Set(localMeals.map((meal: Meal) => meal.strCategory)),
       ];
@@ -208,13 +178,12 @@ export const fetchMealCategories = createAsyncThunk(
         
 
         if (apiCategory) {
-          // If category exists in API, use the API idCategory
+         
           return {
             ...apiCategory,
           };
         } else {
-          // If category does not exist in API, generate a local ID
-          return {
+         return {
             idCategory: `local-${index + 1}`, // Unique local ID for non-API categories
             strCategory: category,
             strCategoryThumb: "",
@@ -223,9 +192,6 @@ export const fetchMealCategories = createAsyncThunk(
         }
       });
 
-      console.log("Local Categories:", localCategories);
-
-      // Merge local categories first, then API categories, ensuring no duplicates
       const mergedCategories = [
         ...localCategories,
         ...apiCategories.filter(
@@ -236,8 +202,6 @@ export const fetchMealCategories = createAsyncThunk(
             )
         ),
       ];
-
-      console.log("Final Merged Categories:", mergedCategories);
       return mergedCategories;
     } catch (error) {
       console.error("Error fetching meal categories:", error);
@@ -246,12 +210,6 @@ export const fetchMealCategories = createAsyncThunk(
   }
 );
 
-
-
-// export const fetchMealCategories = createAsyncThunk('meals/fetchMealCategories', async () => {
-//   const categories = await fetchMealCategoriesApi();
-//   return categories;
-// });
 
 const mealSlice = createSlice({
   name: 'meals',

@@ -1,50 +1,87 @@
-# React + TypeScript + Vite
+Recipe App
+A modern, high-performance Recipe App built with React 19, TypeScript, and Vite. The app leverages Redux Toolkit for state management and Axiox for API handling.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+📦 Tech Stack
+Frontend: React 19, TypeScript, React Router
+State Management: Redux Toolkit
+API Handling: Axios
+Utilities: Lodash, UUID, React Infinite Scroll
+Build Tool: Vite
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🚀 Getting Started
+Prerequisites
+Make sure you have Node.js (>=16) installed.
 
-## Expanding the ESLint configuration
+Installation
+Clone the repository:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+sh
 
-- Configure the top-level `parserOptions` property like this:
+git clone https://github.com/Elizabeth-Oteje/recipe-app.git
+cd recipe-app
+Install dependencies:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+sh
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+npm install
+Development
+To start the development server:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+sh
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+npm run dev
+This will run Vite’s development server, usually available at http://localhost:5173/.
+
+Production Build
+To create an optimized production build:
+
+sh
+
+npm run build
+To preview the build:
+
+sh
+
+npm run preview
+Linting
+To check and fix linting issues:
+
+sh
+
+npm run lint
+📂 Project Structure
+csharp
+
+recipe-app/
+├── src/
+│   ├── api/               # API calls
+│   ├── components/        # Reusable UI components
+│   ├── interfaces/        # Types & Interfaces
+│   ├── pages/             # Page components
+│   ├── redux/             # Redux setup
+│   ├── App.tsx            # Main app component
+│   ├── main.tsx           # React entry point
+│   ├── index.css          # Global styles
+├── public/                # Static assets
+├── github/                # GitHub Actions
+├── .eslint.config.js           # ESLint configuration
+├── tsconfig.json          # TypeScript configuration
+├── vite.config.ts         # Vite configuration
+├── package.json           # Dependencies and scripts
+└── README.md              # Project documentation
+
+
+📌 Key Features
+✅ Fast Performance: Uses Vite for lightning-fast builds.
+✅ State Management: Uses Redux Toolkit with persistence.
+✅ Infinite Scrolling: Implements lazy loading with react-infinite-scroll-component.
+
+✨ Contributing
+Fork the repository.
+Create a new branch: git checkout -b feature-name
+Commit your changes: git commit -m "Added new feature"
+Push to the branch: git push origin feature-name
+Open a Pull Request.
+
+
