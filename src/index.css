@@ -70,13 +70,7 @@ input{
   border: 1px solid #ccc;
   margin-bottom: 20px;
 }
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
- 
-}
+
 
 @media screen and (max-width: 768px){
  .container{
